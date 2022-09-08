@@ -1,4 +1,4 @@
-# Holzraum SYstem CADWORK API.x64 python modules 
+# Holzraum System CADWORK API.x64 python modules 
 
 This repository must be located in the current version userprofile of cadwork as shown below
 C:\Users\Public\Documents\cadwork\userprofil_29\3d\API.x64
