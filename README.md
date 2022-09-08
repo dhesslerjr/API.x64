@@ -6,8 +6,8 @@ C:\Users\Public\Documents\cadwork\userprofil_29\3d\API.x64
 Each subfolder under API.x64 must have the same name as a python file it contains
 
 ## AddNuggetNode 
-THhis module is for generating a model node for use as the volumetric center in a GenerateNugget operation
+This module is for generating a model node for use as the volumetric center in a GenerateNugget operation
 
 ## GenerateNugget 
-This module creates a volume copy of specified dimensions and offsets the copy to a z-offset, then clears everything around it with a cutting boundary to produce a Holzraum System nugget of a cadwork model
+This module creates a volume copy of specified dimensions and offsets the copy to a z-offset, then clears everything around it with a cutting boundary to produce a Holzraum System nugget of a cadwork model. The operation occurs for every activated node created using AddNuggetNode
 
