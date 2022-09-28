@@ -7,10 +7,12 @@ import utility_controller       as uc
 import visualization_controller as vc
 
 
-version='GenerateNugget::v7R'
-debug_mode=False
+version='GenerateNugget::v8'
+debug_mode=True
 do_deletes=True
 
+#CHANGES
+#a - v8 moves dimensioning to addnuggetnode
 #TODO
 #1 -refactor this POC into functions for obtaining boxes, doing copy/cut, and deletes
 #2 -determined of UX inputs can have default values displayed ("just press enter")
@@ -26,38 +28,44 @@ def log(do_it,astr):
 #MAIN STARTS HERE
 #where to store cube layer names
 cube_attr = 25 #H_Design Description 1 
+cube_dimensions = 26
 
 #default sizes
 boundary_size_x = boundary_size_y = boundary_size_z = 200
 cutit_adds = 20
 copy_z_offset=500
 
-#get sizes from user in cwUX
-sizes = uc.get_user_string('[' + version + '] Enter boundary sizes X,Y,Z (mm):')
-sizes=sizes.split(',')
-if(len(sizes)==3):
-	boundary_size_x = int(sizes[0])
-	boundary_size_y = int(sizes[1])
-	boundary_size_z = int(sizes[2])
-	
-copy_z_offset = uc.get_user_double('Enter Z-axis copy offset (mm):')
-if(copy_z_offset<100):
-    copy_z_offset=100
-log(debug_mode,'copy_z_offset=' + str(copy_z_offset))
-half_x = boundary_size_x/2
-log(debug_mode,'half_x=' + str(half_x))
-half_y = boundary_size_y/2
-log(debug_mode,'half_y=' + str(half_y))
-half_z = boundary_size_z/2
-log(debug_mode,'half_z=' + str(half_z))
-
-
 #get address of selected node(s)
-x=y=z=0
 els = ec.get_user_element_ids()
+log(debug_mode,els)
+
 for el in els:
+    x=y=z=0
+    log(debug_mode,'processing elementid: ' + str(el))
     #use only nodes with correct cube_attr value
     if(ac.get_user_attribute(el,cube_attr)=='nugget node'):    
+        #read node dimensions
+        #sizes = uc.get_user_string('[' + version + '] Enter boundary sizes X,Y,Z (mm):')
+        sizesStr = ac.get_user_attribute(el,cube_dimensions)
+        
+        sizes=sizesStr.split(',')
+        if(len(sizes)==4):
+            boundary_size_x = int(sizes[0])
+            boundary_size_y = int(sizes[1])
+            boundary_size_z = int(sizes[2])
+            copy_z_offset = int(sizes[3])
+            
+        if(copy_z_offset<100):
+            copy_z_offset=100
+        log(debug_mode,'copy_z_offset=' + str(copy_z_offset))
+        half_x = boundary_size_x/2
+        log(debug_mode,'half_x=' + str(half_x))
+        half_y = boundary_size_y/2
+        log(debug_mode,'half_y=' + str(half_y))
+        half_z = boundary_size_z/2
+        log(debug_mode,'half_z=' + str(half_z))
+
+
         aname=ac.get_name(el)
         log(debug_mode,aname)
         log(debug_mode,'user_' + str(cube_attr) + '=' + ac.get_user_attribute(el,cube_attr))
@@ -170,7 +178,7 @@ for el in els:
                         
                 # label it
                 ec.create_text_object(aname,
-                        cadwork.point_3d(x,y,z+copy_z_offset+200+boundary_size_z),
+                        cadwork.point_3d(x,y,z+copy_z_offset+1.5*boundary_size_z),
                         cadwork.point_3d(50,0,0),
                         cadwork.point_3d(00,0,50),
                         50)
